@@ -40,21 +40,3 @@ class SelectSQLQueryConstructor(AbstractSQLQueryConstructor):
             )
 
         return " ".join([i.compile() for i in sql_strings]) + ";"
-
-
-
-query = {
-    "select": [
-        "a",
-    ],
-    "from": [
-        "users",
-    ],
-    "where": [
-        "x=2",
-    ]
-}
-
-c = SelectSQLQueryConstructor()
-
-print(c.compile(query))
