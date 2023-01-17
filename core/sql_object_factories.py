@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from sql_objects import (BaseSQLObject,
+from core.sql_objects import (BaseSQLObject,
                          SelectSQLObject,
                          FromSQLObject,
                          WhereSQLObject,
@@ -107,7 +107,7 @@ class FromSQLObjectFactory(AbstractSQLObjectFactory):
 
         return FromSQLObject(*args)
 
-       
+
 class WhereSQLObjectFactory(AbstractSQLObjectFactory):
 
     key_clauses = {
@@ -116,7 +116,7 @@ class WhereSQLObjectFactory(AbstractSQLObjectFactory):
     }
 
     def _get_subqueries(self, query: dict) -> BaseSQLObject:
-        
+
         query_type = self.key_clauses.get(list(query.keys())[0])
 
         query_args = []
@@ -135,7 +135,7 @@ class WhereSQLObjectFactory(AbstractSQLObjectFactory):
     def get_object(self, *args) -> BaseSQLObject:
 
         query = args[0]
-        
+
         if isinstance(query, str):
 
             return WhereSQLObject(query)

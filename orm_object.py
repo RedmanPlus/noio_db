@@ -1,5 +1,6 @@
-from pydantic import BaseModel
-from sql_query_constructors import SelectSQLQueryConstructor
+from inspect import getouterframes, currentframe
+
+from core import SelectSQLQueryConstructor
 
 
 class SelectMixin:
@@ -21,13 +22,13 @@ class SelectMixin:
                     f"Unknown attribute: {k}"
                 )
 
-            query = {
-                "select": ["*"],
-                "from": [cls.__name__.lower()],
-                "where": {
-                    "and": [f"{k}={v}" for k, v in kwargs.items()],
-                },
-            }
+        query = {
+            "select": ["*"],
+            "from": [cls.__name__.lower()],
+            "where": {
+                "and": [f"{k}={v}" for k, v in kwargs.items()],
+            },
+        }
 
         return SelectSQLQueryConstructor().compile(query)
 
@@ -36,15 +37,14 @@ class SelectMixin:
 
         return cls._get_sync(**kwargs)
 
-
     @classmethod
     def get(cls, **kwargs) -> str:
 
+        curframe = currentframe()
+        outframe = getouterframes(curframe, 1)
 
-class Demo(BaseModel, SelectMixin):
+        if "await" in outframe[1][4][0]:
 
-    a: int
-    b: int
+            return cls._get_async(**kwargs)
 
-
-print(Demo.get(a=5, b=6))
+        return cls._get_sync(**kwargs)

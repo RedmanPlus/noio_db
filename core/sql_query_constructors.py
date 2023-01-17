@@ -1,6 +1,6 @@
 from abc import abstractmethod, ABC
 from typing import Dict
-from sql_object_factories import (AbstractSQLObjectFactory,
+from core.sql_object_factories import (AbstractSQLObjectFactory,
                                   SelectSQLObjectFactory,
                                   FromSQLObjectFactory,
                                   WhereSQLObjectFactory)
