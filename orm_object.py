@@ -5,7 +5,6 @@ from core import SelectSQLQueryConstructor
 
 class SelectMixin:
 
-
     @classmethod
     def _get_fields(cls) -> dict:
         return cls.__annotations__
@@ -48,3 +47,4 @@ class SelectMixin:
             return cls._get_async(**kwargs)
 
         return cls._get_sync(**kwargs)
+    
