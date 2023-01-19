@@ -1,5 +1,5 @@
-from typing import Self, List, Optional
 from dataclasses import dataclass
+from typing import List, Optional, Self
 
 
 @dataclass()
@@ -7,6 +7,7 @@ class ASTNode:
     """An AST node containing information about specific part of a query
     Can contian other nodes inside it for nested structure
     """
+
     name: str
     children: Optional[List[str] | List[Self]] = None
 
@@ -17,10 +18,9 @@ class ASTNode:
         children = self.children
         if isinstance(self.children, ASTNode):
             children = [obj.to_query() for obj in self.children]
-        return {
-            self.name: children
-        }
+        return {self.name: children}
 
+    # pylint: disable=R1710
     def get_child(self, name: str) -> Optional[Self]:
 
         for child in self.children:
@@ -30,6 +30,8 @@ class ASTNode:
             inner_search = child.get_child(name)
             if inner_search is not None:
                 return inner_search
+
+    # pylint: enable=R1710
 
     @classmethod
     def get_args(cls, annotations: dict, **kwargs) -> list:
@@ -58,7 +60,9 @@ class ASTNode:
     @classmethod
     def from_args(cls, members: list, node_name: str, **kwargs) -> Self:
 
-        param_lists = [cls.get_args(member.__annotations__, **kwargs) for member in members]
+        param_lists = [
+            cls.get_args(member.__annotations__, **kwargs) for member in members
+        ]
         node = cls(name=node_name, children=param_lists)
 
         return node
@@ -71,6 +75,7 @@ class AST:
     Can be extended or modified for purposes of creating full AST of any given
     query
     """
+
     root: ASTNode = ASTNode(name="root")
 
     def __getitem__(self, item):
@@ -80,3 +85,13 @@ class AST:
     def __setitem__(self, key, value):
         pass
 
+    def to_query(self) -> dict:
+        query = {}
+        for child in self.root.children:
+            q = child.to_query()
+            query.update(**q)
+
+        return query
+
+    def __str__(self) -> str:
+        return str(self.to_query())

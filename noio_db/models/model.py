@@ -1,10 +1,14 @@
-from inspect import getouterframes, currentframe
+# pylint: disable=E0611
+from inspect import currentframe, getouterframes
 
 from core import SelectSQLQueryConstructor
+from pydantic import BaseModel
+
+
+# pylint: enable=E0611
 
 
 class SelectMixin:
-
     @classmethod
     def _get_fields(cls) -> dict:
         return cls.__annotations__
@@ -17,9 +21,7 @@ class SelectMixin:
 
             if not field_val:
 
-                raise Exception(
-                    f"Unknown attribute: {k}"
-                )
+                raise Exception(f"Unknown attribute: {k}")
 
         query = {
             "select": ["*"],
@@ -47,4 +49,8 @@ class SelectMixin:
             return cls._get_async(**kwargs)
 
         return cls._get_sync(**kwargs)
-    
+
+
+class Model(BaseModel, SelectMixin):
+
+    id: int

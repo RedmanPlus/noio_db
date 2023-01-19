@@ -1,9 +1,9 @@
-from typing import List, Dict
+from typing import Dict, List
+
 from models import BaseNoIoObject
 
 
 class Query:
-
     def __init__(self):
 
         self.objects: List[BaseNoIoObject] = []
