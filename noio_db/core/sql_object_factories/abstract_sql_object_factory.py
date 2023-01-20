@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from core.sql_objects import BaseSQLObject
+from noio_db.core.sql_objects import BaseSQLObject
 
 
 class AbstractSQLObjectFactory(ABC):

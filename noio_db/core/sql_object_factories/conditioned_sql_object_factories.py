@@ -1,4 +1,4 @@
-from core.sql_objects import (
+from noio_db.core.sql_objects import (
     ArgInBracesSQLObject,
     BaseSQLObject,
     HavingSQLObject,
@@ -28,7 +28,7 @@ class ConditionedSQLObjectFactory(AbstractSQLObjectFactory):
 
             query_args.append(item)
 
-        return ArgInBracesSQLObject(query_type.get_object(query_args))
+        return ArgInBracesSQLObject(query_type.get_object(*query_args))
 
     def get_object(self, *args) -> BaseSQLObject:
 

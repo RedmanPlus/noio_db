@@ -1,4 +1,4 @@
-from core.sql_objects import BaseSQLObject, FromSQLObject, JoinSQLObject
+from noio_db.core.sql_objects import BaseSQLObject, FromSQLObject, JoinSQLObject
 
 from .abstract_sql_object_factory import AbstractSQLObjectFactory
 from .pair_op_sql_object_factories import AndSQLObjectFactory
@@ -8,7 +8,7 @@ class JoinSQLObjectFactory(AbstractSQLObjectFactory):
     def get_object(self, *args) -> BaseSQLObject:
         join_params = args[3]
         if len(args) > 4:
-            join_params = AndSQLObjectFactory().get_object(args[3:])
+            join_params = AndSQLObjectFactory().get_object(*args[3:])
 
         return JoinSQLObject(*args[:3], join_params)
 

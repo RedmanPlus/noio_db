@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import Dict
 
-from core.sql_object_factories import (
+from noio_db.core.sql_object_factories import (
     AbstractSQLObjectFactory,
     FromSQLObjectFactory,
     GroupBySQLObjectFactory,
@@ -38,7 +38,7 @@ class SelectSQLQueryConstructor(AbstractSQLQueryConstructor):
 
         for k, v in query.items():
 
-            if isinstance(v, dict):
+            if isinstance(v, (dict, str)):
                 sql_strings.append(self.constructor_markers.get(k).get_object(v))
                 continue
 

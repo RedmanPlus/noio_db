@@ -1,1 +1,1 @@
-from core.sql_query_constructors import SelectSQLQueryConstructor
+from noio_db.core.sql_query_constructors import SelectSQLQueryConstructor

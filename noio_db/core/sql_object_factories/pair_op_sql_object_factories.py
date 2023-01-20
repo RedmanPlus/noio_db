@@ -1,4 +1,10 @@
-from core.sql_objects import AndSQLObject, AsSQLObject, BaseSQLObject, OrSQLObject
+from noio_db.core.sql_objects import (
+    AndSQLObject,
+    AsSQLObject,
+    BaseSQLObject,
+    OrSQLObject,
+)
+from noio_db.utils import pair_up_args
 
 from .abstract_sql_object_factory import AbstractSQLObjectFactory
 
@@ -8,10 +14,11 @@ class PairOPSQLObjectFactory(AbstractSQLObjectFactory):
     SQLObjectClass: BaseSQLObject
 
     def get_object(self, *args) -> BaseSQLObject:
+        new_args = list(args)
         if len(args) >= 2:
-            args = [args[i : i + 2] for i in range(0, len(args), 2)]
+            new_args = pair_up_args(*args)
         pairs = []
-        for arg_pair in args:
+        for arg_pair in new_args:
             if len(arg_pair) < 2:
                 pairs.append(arg_pair[0])
                 continue

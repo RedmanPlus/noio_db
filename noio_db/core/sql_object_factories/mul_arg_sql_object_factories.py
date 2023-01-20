@@ -1,4 +1,4 @@
-from core.sql_objects import (
+from noio_db.core.sql_objects import (
     BaseSQLObject,
     CommaSQLObject,
     GroupBySQLObject,
@@ -15,7 +15,9 @@ class MulArgsSQLObjectFactory(AbstractSQLObjectFactory):
 
     def get_object(self, *args) -> BaseSQLObject:
         root = args[0]
-        if args > 1:
+        if isinstance(root, str):
+            return self.SQLObjectClass(root)
+        if len(args) > 1:
             root = None
             for i, arg in enumerate(args):
                 if i == 0:
