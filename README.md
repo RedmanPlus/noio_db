@@ -2,6 +2,8 @@
 
 An Object Relational Mapper (ORM) built to work with any IO
 
+![coverage](https://github.com/RedmanPlus/noio_db/actions/workflows/test.yml/badge.svg)
+
 ## Inspirations
 Implements a No IO architecture proposed by Cory Benfield in his talk on PyCon 2016 - https://www.youtube.com/watch?v=7cC3_jGwl_U&t=1503s
 
