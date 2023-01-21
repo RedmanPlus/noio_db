@@ -2,6 +2,7 @@
 
 An Object Relational Mapper (ORM) built to work with any IO
 
+![linting](https://github.com/RedmanPlus/noio_db/actions/workflows/lint.yml/badge.svg)
 ![coverage](https://github.com/RedmanPlus/noio_db/actions/workflows/test.yml/badge.svg)
 
 ## Inspirations
