@@ -1,8 +1,9 @@
 # pylint: disable=E0611
 from inspect import currentframe, getouterframes
 
-from core import SelectSQLQueryConstructor
 from pydantic import BaseModel
+
+from noio_db.core import SelectSQLQueryConstructor
 
 
 # pylint: enable=E0611

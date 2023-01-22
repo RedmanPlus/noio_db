@@ -1,0 +1,1 @@
+SELECT users.name FROM users FULL OUTER JOIN estate ON users.id=estate.id WHERE (users.name=John Doe AND users.age=25 AND estate.price=50000) GROUP BY estate.price ORDER BY estate.price;
