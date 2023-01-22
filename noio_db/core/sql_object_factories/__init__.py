@@ -3,6 +3,7 @@ from .conditioned_sql_object_factories import (
     HavingSQLObjectFactory,
     WhereSQLObjectFactory,
 )
+from .create_sql_object_factory import CreateTableSQLObjectFactory
 from .for_sql_object_factory import FromSQLObjectFactory
 from .mul_arg_sql_object_factories import (
     GroupBySQLObjectFactory,

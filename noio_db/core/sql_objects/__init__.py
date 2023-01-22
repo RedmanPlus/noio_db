@@ -1,4 +1,9 @@
 from .base import BaseSQLObject
+from .create import (
+    ArgSpecialParametersSQLObject,
+    CreateTableArgSQLObject,
+    CreateTableSQLObject,
+)
 from .insert import InsertSQLObject
 from .select import (
     FromSQLObject,

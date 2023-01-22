@@ -3,7 +3,7 @@ from inspect import currentframe, getouterframes
 
 from pydantic import BaseModel
 
-from noio_db.core import SelectSQLQueryConstructor
+from noio_db.core import AST, CreateTableSQLObjectFactory, SelectSQLQueryConstructor
 
 
 # pylint: enable=E0611
@@ -17,20 +17,22 @@ class SelectMixin:
     @classmethod
     def _get_sync(cls, **kwargs) -> str:
         fields = cls._get_fields()
-        for k, v in kwargs.items():
+        for k in kwargs:
             field_val = fields.get(k, False)
 
             if not field_val:
 
                 raise Exception(f"Unknown attribute: {k}")
 
-        query = {
-            "select": ["*"],
-            "from": [cls.__name__.lower()],
-            "where": {
-                "and": [f"{k}={v}" for k, v in kwargs.items()],
-            },
-        }
+        # pylint: disable=W0212, W0106
+        ast = AST()
+        ast._select("*")
+        ast._from(cls.__name__.lower()),
+        ast._where()
+        ast._where._and(**kwargs)
+        # pylint: enable=W0212, W0106
+
+        query = ast.to_dict()
 
         return SelectSQLQueryConstructor().compile(query)
 
@@ -52,6 +54,15 @@ class SelectMixin:
         return cls._get_sync(**kwargs)
 
 
-class Model(BaseModel, SelectMixin):
+class CreateModelMixin:
+    @classmethod
+    def create(cls):
+        name = cls.__name__.lower()
+        annotations = cls.__annotations__
+
+        return CreateTableSQLObjectFactory().get_object(name, annotations)
+
+
+class Model(BaseModel, SelectMixin, CreateModelMixin):
 
     id: int

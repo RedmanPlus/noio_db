@@ -1,2 +1,3 @@
 from noio_db.core.abstract_syntax_tree import AST
+from noio_db.core.sql_object_factories import CreateTableSQLObjectFactory
 from noio_db.core.sql_query_constructors import SelectSQLQueryConstructor
