@@ -1,1 +1,1 @@
-{}
+{'select': ['users.name', 'users.age', 'estate.price'], 'from': ['users', 'estate', 'id'], 'where': {'and': ["users.name = 'John Doe'", 'users.age = 25', 'estate.price = 50000', {'or': ["estate.type = 'single floor home'"]}]}}

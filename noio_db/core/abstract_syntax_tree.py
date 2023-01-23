@@ -9,7 +9,7 @@ class AST:
             other = AST()
             other.__name__ = item
             self.__dict__[item[1:]] = other
-            setattr(self.__class__, item, other)
+            setattr(self, item, other)
             return self.__dict__[item[1:]]
 
     def __call__(self, *args, **kwargs):
@@ -21,8 +21,13 @@ class AST:
     def to_dict(self) -> dict:
         result_dict: dict = {}
         for k, v in self.__dict__.items():
+
+            if k in ARG_METHOD_NAMES.union(KWARG_METHOD_NAMES):
+                continue
+
             if k == "__name__":
                 continue
+
             if isinstance(v, AST):
                 v = v.to_dict()
 

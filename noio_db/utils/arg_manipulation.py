@@ -23,11 +23,28 @@ def pair_up_args(*args) -> List[List[str]]:
     return result
 
 
+def construct_arg_pair(key: str, value: any) -> str:
+
+    if isinstance(value, str):
+
+        return f"{key} = '{value}'"
+
+    if isinstance(value, (int, float)):
+
+        return f"{key} = {value}"
+
+    if isinstance(value, bool):
+
+        return f"{key} = {int(value)}"
+
+    raise Exception(f"Unsupported value type {type(value)}")
+
+
 def reformat_dict(into: dict) -> list:
     result: list = []
     for k, v in into.items():
         if f"_{k}" not in ARG_METHOD_NAMES.union(KWARG_METHOD_NAMES):
-            result.append(f"{k}={v}")
+            result.append(construct_arg_pair(k, v))
             continue
 
         if f"_{k}" in ARG_METHOD_NAMES.union(KWARG_METHOD_NAMES) and isinstance(
@@ -38,5 +55,13 @@ def reformat_dict(into: dict) -> list:
             continue
 
         result.append(v)
+
+    return result
+
+
+def zip_into_dict(list_a: list, list_b: list) -> dict:
+    result: dict = {}
+    for a, b in zip(list_a, list_b):
+        result[a] = b
 
     return result
