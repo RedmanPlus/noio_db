@@ -2,3 +2,4 @@
 /venv
 *.pyc
 *.egg-info/
+main.py

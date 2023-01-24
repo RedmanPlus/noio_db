@@ -3,6 +3,7 @@ ARG_METHOD_NAMES = {
     "_from",
     "_group_by",
     "_order_by",
+    "_insert",
 }
 
 KWARG_METHOD_NAMES = {

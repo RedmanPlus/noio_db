@@ -1,10 +1,10 @@
 from noio_db.core.sql_objects import (
     BaseSQLObject,
-    CommaSQLObject,
     GroupBySQLObject,
     OrderBySQLObject,
     SelectSQLObject,
 )
+from noio_db.utils import list_into_comma_sql_object
 
 from .abstract_sql_object_factory import AbstractSQLObjectFactory
 
@@ -18,15 +18,7 @@ class MulArgsSQLObjectFactory(AbstractSQLObjectFactory):
         if isinstance(root, str):
             return self.SQLObjectClass(root)
         if len(args) > 1:
-            root = None
-            for i, arg in enumerate(args):
-                if i == 0:
-                    root = CommaSQLObject(arg, args[i + 1])
-                    continue
-                if i == len(args) - 1:
-                    break
-
-                root = CommaSQLObject(root, args[i + 1])
+            root = list_into_comma_sql_object(*args)
 
         return self.SQLObjectClass(root)
 

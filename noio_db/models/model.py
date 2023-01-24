@@ -1,13 +1,15 @@
 # pylint: disable=E0611
-from inspect import currentframe, getouterframes
-
 from pydantic import BaseModel
 
-from noio_db.core import AST, CreateTableSQLObjectFactory
+from noio_db.core import AST, CreateTableSQLObjectFactory, SelectSQLQueryConstructor
 from noio_db.query import Query
+from noio_db.utils import ToAsync, get_current_settings
 
 
 # pylint: enable=E0611
+class ObjectCounter:
+
+    __count__: int = 0
 
 
 class SelectMixin:
@@ -19,7 +21,8 @@ class SelectMixin:
         return cls.__annotations__
 
     @classmethod
-    def _get_sync(cls, **kwargs) -> Query:
+    @ToAsync
+    def filter(cls, **kwargs) -> Query:
         fields = cls._get_fields()
         for k in kwargs:
             field_val = fields.get(k, False)
@@ -41,12 +44,8 @@ class SelectMixin:
         return queryset
 
     @classmethod
-    async def _get_async(cls, **kwargs) -> Query:
-
-        return cls._get_sync(**kwargs)
-
-    @classmethod
-    def _all_sync(cls) -> Query:
+    @ToAsync
+    def all(cls) -> Query:
 
         ast = AST()
 
@@ -59,42 +58,6 @@ class SelectMixin:
 
         return query
 
-    @classmethod
-    async def _all_async(cls) -> Query:
-
-        return cls._all_sync()
-
-    @classmethod
-    def all(cls) -> Query:
-
-        curframe = currentframe()
-        outframe = getouterframes(curframe, 1)
-
-        cls.is_called_async = False
-
-        if "await" in outframe[1][4][0]:
-
-            cls.is_called_async = True
-
-            return cls._all_async()
-
-        return cls._all_sync()
-
-    @classmethod
-    def get(cls, **kwargs) -> Query:
-
-        curframe = currentframe()
-        outframe = getouterframes(curframe, 1)
-
-        cls.is_called_async = False
-
-        if "await" in outframe[1][4][0]:
-            cls.is_called_async = True
-
-            return cls._get_async(**kwargs)
-
-        return cls._get_sync(**kwargs)
-
 
 class CreateModelMixin:
     @classmethod
@@ -105,6 +68,49 @@ class CreateModelMixin:
         return CreateTableSQLObjectFactory().get_object(name, annotations)
 
 
-class Model(BaseModel, SelectMixin, CreateModelMixin):
+class InsertMixin:
+    def __init__(self, *args, **kwargs):
+        self.is_called_async: bool = False
+        super().__init__(*args, **kwargs)
 
-    id: int
+    @ToAsync
+    def insert(self):
+
+        table_name = self.table_name
+        table_fields = list(self.__dict__.keys())
+        table_fields.insert(0, "id")
+        table_values = list(self.__dict__.values())
+        table_values.insert(0, self.__count__)
+
+        # pylint: disable=W0212
+        ast = AST()
+        ast._insert(table_name, table_fields, table_values)
+        # pylint: enable=W0212
+
+        query = SelectSQLQueryConstructor().compile(ast.to_dict())
+        driver = get_current_settings(self)
+
+        driver(query)
+
+
+class Model(BaseModel, SelectMixin, CreateModelMixin, InsertMixin, ObjectCounter):
+
+    __from_orm__: bool = False
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.__count__ += 1
+
+    @property
+    def table_name(self):
+        return self.__class__.__name__.lower()
+
+    @property
+    def table_fields(self):
+        return list(self.__annotations__.keys())
+
+    def save(self):
+        if self.__from_orm__:
+            pass
+        else:
+            self.insert()

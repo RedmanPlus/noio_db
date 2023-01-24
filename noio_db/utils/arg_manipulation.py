@@ -1,5 +1,6 @@
 from typing import List
 
+from noio_db.core.sql_objects import CommaSQLObject
 from noio_db.utils.consts import ARG_METHOD_NAMES, KWARG_METHOD_NAMES
 
 
@@ -65,3 +66,18 @@ def zip_into_dict(list_a: list, list_b: list) -> dict:
         result[a] = b
 
     return result
+
+
+def list_into_comma_sql_object(*args) -> CommaSQLObject:
+
+    root = None
+    for i, arg in enumerate(args):
+        if i == 0:
+            root = CommaSQLObject(arg, args[i + 1])
+            continue
+        if i == len(args) - 1:
+            break
+
+        root = CommaSQLObject(root, args[i + 1])
+
+    return root

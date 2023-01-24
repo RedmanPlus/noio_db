@@ -1,9 +1,7 @@
-from importlib import import_module
 from typing import Union
 
 from noio_db.core import AST, SelectSQLQueryConstructor
-from noio_db.settings import Settings
-from noio_db.utils import zip_into_dict
+from noio_db.utils import get_current_settings, zip_into_dict
 
 
 class Query:
@@ -19,14 +17,7 @@ class Query:
 
         self.is_called_async: bool = False
 
-        if user_settings := Settings.__subclasses__():
-            self.db_driver = import_module(user_settings[0]().driver_path).Driver(
-                self, user_settings[0]()
-            )
-        else:
-            self.db_driver = import_module(Settings().driver_path).Driver(
-                self, Settings()
-            )
+        self.db_driver = get_current_settings(self)
 
     def __getitem__(self, item):
 
@@ -40,7 +31,7 @@ class Query:
 
             for i, result in enumerate(self.objects):
                 kwargs = zip_into_dict(model_field_names, result)
-                self.objects[i] = self.model_class(**kwargs)
+                self.objects[i] = self.model_class(__from_orm__=True, **kwargs)
 
             self.called = True
         return self.objects[item]

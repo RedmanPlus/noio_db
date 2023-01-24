@@ -6,6 +6,7 @@ from noio_db.core.sql_object_factories import (
     FromSQLObjectFactory,
     GroupBySQLObjectFactory,
     HavingSQLObjectFactory,
+    InsertSQLObjectFactory,
     OrderBySQLObjectFactory,
     SelectSQLObjectFactory,
     WhereSQLObjectFactory,
@@ -30,6 +31,7 @@ class SelectSQLQueryConstructor(AbstractSQLQueryConstructor):
         "group_by": GroupBySQLObjectFactory(),
         "having": HavingSQLObjectFactory(),
         "order_by": OrderBySQLObjectFactory(),
+        "insert": InsertSQLObjectFactory(),
     }
 
     def compile(self, query: dict) -> str:
