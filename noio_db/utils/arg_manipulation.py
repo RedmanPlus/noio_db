@@ -69,15 +69,32 @@ def zip_into_dict(list_a: list, list_b: list) -> dict:
 
 
 def list_into_comma_sql_object(*args) -> CommaSQLObject:
-
     root = None
     for i, arg in enumerate(args):
+        if arg is None:
+            break
+
         if i == 0:
             root = CommaSQLObject(arg, args[i + 1])
             continue
+
         if i == len(args) - 1:
             break
 
         root = CommaSQLObject(root, args[i + 1])
 
     return root
+
+
+def list_to_insert_vals(*args) -> list:
+    result = []
+
+    for one in args:
+
+        if isinstance(one, str):
+            result.append(f"'{one}'")
+            continue
+
+        result.append(one)
+
+    return result

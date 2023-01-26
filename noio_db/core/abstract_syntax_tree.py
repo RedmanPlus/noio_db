@@ -1,4 +1,4 @@
-from noio_db.utils.arg_manipulation import reformat_dict
+from noio_db.utils.arg_manipulation import list_to_insert_vals, reformat_dict
 from noio_db.utils.consts import ARG_METHOD_NAMES, KWARG_METHOD_NAMES
 
 
@@ -37,9 +37,12 @@ class AST:
             result_dict[k] = v
 
         for k, v in result_dict.items():
-            if (k == "where" or k == "having") and isinstance(v, dict):
+            if (k == "where" or k == "having" or k == "insert") and isinstance(v, dict):
                 newargs = reformat_dict(v)
                 result_dict[k] = newargs[0]
+
+            if k == "insert" and isinstance(v, list):
+                v[2] = list_to_insert_vals(*v[2])
 
         return result_dict
 

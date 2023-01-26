@@ -37,13 +37,12 @@ class BaseDriver:
         self._cursor = self._connection.cursor()
 
     def execute_sync(self, *args, **kwargs) -> Union[Tuple[str], None]:
-
         query_result = self._cursor.execute(*args, **kwargs)
-        if query_result is None:
+        result = query_result.fetchall()
+        if not result:
             self._connection.commit()
-            return None
 
-        return query_result.fetchall()
+        return result
 
     async def execute_async(self, *args, **kwargs):
 

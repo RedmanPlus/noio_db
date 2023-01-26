@@ -20,12 +20,18 @@ class InsertSQLObjectFactory(AbstractSQLObjectFactory):
         field_mappings = ArgInBracesSQLObject(list_into_comma_sql_object(*args[1]))
 
         values = []
+        if len(args[2:]) == 1:
 
-        for val_group in args[2:]:
+            values = ArgInBracesSQLObject(list_into_comma_sql_object(*args[2]))
 
-            val_mappings = ArgInBracesSQLObject(list_into_comma_sql_object(*val_group))
-            values.append(val_mappings)
+        else:
+            for val_group in args[2:]:
 
-        values = list_into_comma_sql_object(*values)
+                val_mappings = ArgInBracesSQLObject(
+                    list_into_comma_sql_object(*val_group)
+                )
+                values.append(val_mappings)
+
+            values = list_into_comma_sql_object(*values)
 
         return InsertSQLObject(destination, field_mappings, values)

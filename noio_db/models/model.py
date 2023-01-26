@@ -73,14 +73,14 @@ class InsertMixin:
         self.is_called_async: bool = False
         super().__init__(*args, **kwargs)
 
-    @ToAsync
+    # @ToAsync
     def insert(self):
 
         table_name = self.table_name
         table_fields = list(self.__dict__.keys())
-        table_fields.insert(0, "id")
+        table_fields.pop(0)
         table_values = list(self.__dict__.values())
-        table_values.insert(0, self.__count__)
+        table_values.pop(0)
 
         # pylint: disable=W0212
         ast = AST()
@@ -94,12 +94,8 @@ class InsertMixin:
 
 
 class Model(BaseModel, SelectMixin, CreateModelMixin, InsertMixin, ObjectCounter):
-
     __from_orm__: bool = False
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.__count__ += 1
+    id: int = None
 
     @property
     def table_name(self):
