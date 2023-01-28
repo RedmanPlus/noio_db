@@ -16,3 +16,4 @@ from .pair_op_sql_object_factories import (
     AsSQLObjectFactory,
     OrSQLObjectFactory,
 )
+from .update_sql_object_factory import SetSQLObjectFactory, UpdateSQLObjectFactory

@@ -41,6 +41,10 @@ class AST:
                 newargs = reformat_dict(v)
                 result_dict[k] = newargs[0]
 
+            if k == "set" and isinstance(v, dict):
+                newargs = reformat_dict(v)
+                result_dict[k] = newargs
+
             if k == "insert" and isinstance(v, list):
                 v[2] = list_to_insert_vals(*v[2])
 

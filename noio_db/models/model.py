@@ -1,5 +1,5 @@
 # pylint: disable=E0611
-from pydantic import BaseModel
+from pydantic import BaseConfig, BaseModel
 
 from noio_db.core import AST, CreateTableSQLObjectFactory, SelectSQLQueryConstructor
 from noio_db.query import Query
@@ -93,9 +93,31 @@ class InsertMixin:
         driver(query)
 
 
-class Model(BaseModel, SelectMixin, CreateModelMixin, InsertMixin, ObjectCounter):
-    __from_orm__: bool = False
+class UpdateMixin:
+    def update(self):
+        table_name = self.table_name
+        updated_fields = self.__dict__
+        id_field = updated_fields.pop("id")
+
+        # pylint: disable=W0212
+        ast = AST()
+        ast._update(table_name)
+        ast._set(**updated_fields)
+        ast._where(**{"id": id_field})
+        # pylint: enable=W0212
+
+        query = SelectSQLQueryConstructor().compile(ast.to_dict())
+        driver = get_current_settings(self)
+
+        driver(query)
+
+
+class Model(BaseModel, SelectMixin, CreateModelMixin, InsertMixin, UpdateMixin):
+
     id: int = None
+
+    class Config(BaseConfig):
+        is_from_orm: bool = False
 
     @property
     def table_name(self):
@@ -105,8 +127,20 @@ class Model(BaseModel, SelectMixin, CreateModelMixin, InsertMixin, ObjectCounter
     def table_fields(self):
         return list(self.__annotations__.keys())
 
+    @property
+    def is_from_orm(self):
+        return self.Config.is_from_orm
+
+    @is_from_orm.setter
+    def is_from_orm(self, value: bool):
+        if not isinstance(value, bool):
+            raise Exception()
+
+        self.Config.is_from_orm = value
+
     def save(self):
-        if self.__from_orm__:
-            pass
-        else:
-            self.insert()
+
+        if self.Config.is_from_orm:
+            self.update()
+
+        self.insert()

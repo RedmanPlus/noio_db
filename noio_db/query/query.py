@@ -32,7 +32,8 @@ class Query:
 
         for i, result in enumerate(self.objects):
             kwargs = zip_into_dict(model_field_names, result)
-            self.objects[i] = self.model_class(__from_orm__=True, **kwargs)
+            self.objects[i] = self.model_class(**kwargs)
+            self.objects[i].Config.is_from_orm = True
 
         self.called = True
 

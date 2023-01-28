@@ -4,6 +4,7 @@ ARG_METHOD_NAMES = {
     "_group_by",
     "_order_by",
     "_insert",
+    "_update",
 }
 
 KWARG_METHOD_NAMES = {
@@ -11,4 +12,5 @@ KWARG_METHOD_NAMES = {
     "_having",
     "_and",
     "_or",
+    "_set",
 }

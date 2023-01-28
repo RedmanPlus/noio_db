@@ -15,6 +15,7 @@ from .select import (
     SelectSQLObject,
     WhereSQLObject,
 )
+from .update import SetSQLObject, UpdateSQLObject
 from .utils import (
     AndSQLObject,
     ArgInBracesSQLObject,
