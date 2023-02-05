@@ -142,5 +142,5 @@ class Model(BaseModel, SelectMixin, CreateModelMixin, InsertMixin, UpdateMixin):
 
         if self.Config.is_from_orm:
             self.update()
-
-        self.insert()
+        else:
+            self.insert()
