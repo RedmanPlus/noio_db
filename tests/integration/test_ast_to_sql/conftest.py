@@ -29,3 +29,9 @@ def group_by_args():
 def order_by_args():
 
     return ["estate.price"]
+
+
+@pytest.fixture()
+def delete_table():
+
+    return "table"

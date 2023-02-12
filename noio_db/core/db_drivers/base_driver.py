@@ -46,7 +46,12 @@ class BaseDriver:
 
     async def execute_async(self, *args, **kwargs):
 
-        return self.execute_sync(*args, **kwargs)
+        query_result = await self._cursor.execute(*args, **kwargs)
+        result = await query_result.fetchall()
+        if not result:
+            await self._connection.commit()
+
+        return result
 
     def __call__(self, *args, **kwargs):
 

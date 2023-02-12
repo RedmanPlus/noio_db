@@ -4,6 +4,7 @@ from .create import (
     CreateTableArgSQLObject,
     CreateTableSQLObject,
 )
+from .delete import DeleteSQLObject
 from .insert import InsertSQLObject
 from .select import (
     FromSQLObject,

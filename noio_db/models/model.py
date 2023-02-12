@@ -112,7 +112,29 @@ class UpdateMixin:
         driver(query)
 
 
-class Model(BaseModel, SelectMixin, CreateModelMixin, InsertMixin, UpdateMixin):
+class DeleteMixin:
+    def delete(self):
+        table_name = self.table_name
+        object_fields = self.__dict__
+
+        id_field = object_fields.pop("id")
+
+        # pylint: disable=W0212
+        ast = AST()
+        ast._delete(table_name)
+        ast._where(id=id_field)
+
+        # pylint: enable=W0212
+
+        query = SelectSQLQueryConstructor().compile(ast.to_dict())
+        driver = get_current_settings(self)
+
+        driver(query)
+
+
+class Model(
+    BaseModel, SelectMixin, CreateModelMixin, InsertMixin, UpdateMixin, DeleteMixin
+):
 
     id: int = None
 

@@ -5,6 +5,7 @@ ARG_METHOD_NAMES = {
     "_order_by",
     "_insert",
     "_update",
+    "_delete",
 }
 
 KWARG_METHOD_NAMES = {

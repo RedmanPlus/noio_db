@@ -4,6 +4,7 @@ from .conditioned_sql_object_factories import (
     WhereSQLObjectFactory,
 )
 from .create_sql_object_factory import CreateTableSQLObjectFactory
+from .delete_sql_object_factory import DeleteSQLObjectFactory
 from .for_sql_object_factory import FromSQLObjectFactory
 from .insert_sql_object_factory import InsertSQLObjectFactory
 from .mul_arg_sql_object_factories import (
