@@ -63,6 +63,12 @@ class Query:
 
         return self
 
+    def __len__(self):
+        if not self.called:
+            self._fill_query()
+
+        return len(self.objects)
+
     def to_json(self):
 
         if not self.called:
