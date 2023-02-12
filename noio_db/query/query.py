@@ -62,3 +62,10 @@ class Query:
             self._fill_query()
 
         return self
+
+    def to_json(self):
+
+        if not self.called:
+            self._fill_query()
+
+        return [obj.dict() for obj in self.objects]

@@ -35,8 +35,11 @@ class SelectMixin:
         ast = AST()
         ast._select("*")
         ast._from(cls.__name__.lower())
-        ast._where()
-        ast._where._and(**kwargs)
+        if len(kwargs) == 1:
+            ast._where(**kwargs)
+        else:
+            ast._where()
+            ast._where._and(**kwargs)
         # pylint: enable=W0212, W0106
 
         queryset = Query(model=cls, ast=ast)
