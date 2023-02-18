@@ -1,4 +1,6 @@
 # pylint: disable=E0611
+from typing import Tuple
+
 from pydantic import BaseConfig, BaseModel
 
 from noio_db.core import AST, CreateTableSQLObjectFactory, SelectSQLQueryConstructor
@@ -69,6 +71,62 @@ class CreateModelMixin:
         annotations = cls.__annotations__
 
         return CreateTableSQLObjectFactory().get_object(name, annotations)
+
+
+class AlterModelMixin:
+    @classmethod
+    def get_fields(cls, cur_fields: dict) -> Tuple[dict]:
+        new_fields = cls.__annotations__
+
+        old_set, new_set = set(cur_fields.items()), set(new_fields.items())
+
+        intersec = old_set & new_set
+
+        old_set = old_set - intersec
+        new_set = new_set - intersec
+
+        old_keys_set = {item[0] for item in old_set}
+        new_keys_set = {item[0] for item in new_set}
+
+        alter_keys_set = old_keys_set & new_keys_set
+
+        alter = {k: v for k, v in new_fields.items() if k in alter_keys_set}
+
+        drop_set = old_set - set(alter.items())
+        add_set = new_set = set(alter.items())
+
+        drop = dict(list(drop_set))
+        add = dict(list(add_set))
+
+        return alter, drop, add
+
+    @classmethod
+    def alter(cls, cur_fields: dict):
+        name = cls.__name__.lower()
+
+        alter, drop, add = cls.get_fields(cur_fields)
+
+        # pylint: disable=W0212
+        ast = AST()
+
+        ast._alter_table(name)
+
+        for k, v in add.items():
+            argpair = {k: v}
+            ast._add(**argpair)
+
+        for k in drop:
+            ast._drop(k)
+
+        for k, v in alter.items():
+            argpair = {k: v}
+            ast._alter_column(**argpair)
+
+        # pylint: enable=W0212
+
+        query = cls.SelectSQLQueryConstructor().compile(ast.to_dict())
+
+        return query
 
 
 class InsertMixin:
