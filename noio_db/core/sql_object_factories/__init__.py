@@ -1,4 +1,11 @@
 from .abstract_sql_object_factory import AbstractSQLObjectFactory
+from .alter_table_sql_object_factory import (
+    AddSQLObjectFactory,
+    AlterColumnSQLObjectFactory,
+    AlterTableSQLObjectFactory,
+    DropSQLObjectFactory,
+    RenameColumnSQLObjectFactory,
+)
 from .conditioned_sql_object_factories import (
     HavingSQLObjectFactory,
     WhereSQLObjectFactory,

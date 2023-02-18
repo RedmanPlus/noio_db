@@ -3,12 +3,17 @@ from typing import Dict
 
 from noio_db.core.sql_object_factories import (
     AbstractSQLObjectFactory,
+    AddSQLObjectFactory,
+    AlterColumnSQLObjectFactory,
+    AlterTableSQLObjectFactory,
     DeleteSQLObjectFactory,
+    DropSQLObjectFactory,
     FromSQLObjectFactory,
     GroupBySQLObjectFactory,
     HavingSQLObjectFactory,
     InsertSQLObjectFactory,
     OrderBySQLObjectFactory,
+    RenameColumnSQLObjectFactory,
     SelectSQLObjectFactory,
     SetSQLObjectFactory,
     UpdateSQLObjectFactory,
@@ -38,6 +43,11 @@ class SelectSQLQueryConstructor(AbstractSQLQueryConstructor):
         "update": UpdateSQLObjectFactory(),
         "set": SetSQLObjectFactory(),
         "delete": DeleteSQLObjectFactory(),
+        "alter_table": AlterTableSQLObjectFactory(),
+        "alter_column": AlterColumnSQLObjectFactory(),
+        "add": AddSQLObjectFactory(),
+        "drop": DropSQLObjectFactory(),
+        "rename": RenameColumnSQLObjectFactory(),
     }
 
     def compile(self, query: dict) -> str:

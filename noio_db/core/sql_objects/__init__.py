@@ -1,3 +1,10 @@
+from .alter import (
+    AddSQLObject,
+    AlterColumnSQLObject,
+    AlterTableSQLObject,
+    DropSQLObject,
+    RenameColumnSQLObject,
+)
 from .base import BaseSQLObject
 from .create import (
     ArgSpecialParametersSQLObject,

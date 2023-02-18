@@ -4,9 +4,9 @@ List of all enhancements for the library
 
 ## version 0.3.0 requirements:
 
-- Add DELETE commands to the AST
+- Add DELETE commands to the AST | OK
 - Add ALTER TABLE commands to the AST
-- Add supportive methods to the model and query classes to handle object deletion
+- Add supportive methods to the model and query classes to handle object deletion | OK
 - Add primitive migration manager
 
 ## version 0.4.0 requirements:

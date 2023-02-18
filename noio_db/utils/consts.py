@@ -6,6 +6,8 @@ ARG_METHOD_NAMES = {
     "_insert",
     "_update",
     "_delete",
+    "_alter_table",
+    "_drop",
 }
 
 KWARG_METHOD_NAMES = {
@@ -14,4 +16,7 @@ KWARG_METHOD_NAMES = {
     "_and",
     "_or",
     "_set",
+    "_add",
+    "_alter_column",
+    "_rename_column",
 }
